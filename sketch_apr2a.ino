@@ -1,7 +1,8 @@
 #include <ESP8266WiFi.h>
 #include <ESP8266WebServer.h>
 #include <DMDESP.h>
-#include <fonts/EMSans6x8.h>
+#include <fonts/Arial_bold_14.h>
+#include <fonts/SystemFont5x7.h>
 
 //SETUP DMD
 #define DISPLAYS_WIDE 1 
@@ -17,9 +18,15 @@ ESP8266WebServer server(80);
 
 void handlePost(){
   String text = server.arg("text");
+  String alphabet = server.arg("alphabet");
   if(text != ""){
     Disp.clear();
-    Disp.drawText(2,4, text);
+    if(alphabet != ""){   
+    Disp.setFont(SystemFont5x7);
+    Disp.drawText(1, 4, alphabet );
+    }
+    Disp.setFont(Arial_bold_14);
+    Disp.drawText(7,2, text);
     server.send(200, "text/html", "");
   }
 }
@@ -33,9 +40,9 @@ void setup() {
   WiFi.softAP(ssid, password);
   // DMDESP Setup
   Disp.start(); // Jalankan library DMDESP
-  Disp.setBrightness(20); // Tingkat kecerahan
-  Disp.setFont(EMSans6x8); // Tentukan huruf
-
+  Disp.setBrightness(100); // Tingkat kecerahan
+  Disp.setFont(SystemFont5x7); // Tentukan huruf
+  Disp.drawText(1, 4, "Smile");
   Serial.begin(115200);
   Serial.println(WiFi.softAPIP());
 
